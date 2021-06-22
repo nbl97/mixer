@@ -77,6 +77,29 @@ class PatchEmbed(nn.Module):
         return x
 
 
+class MutiHeadMlp(nn.Moduler):
+    def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0., head=1):
+        super().__init__()
+        out_features = out_features or in_features
+        hidden_features = hidden_features // head or in_features
+        self.fc1 = []
+        self.fc2 = []
+        self.act = []
+        for i in range(head):
+            self.fc1.append(nn.Linear(in_features, hidden_features)) 
+            self.act.append(act_layer())
+            self.fc2.append(nn.Linear(hidden_features, out_features))
+
+    def forward(self, x):
+        B,C,N = x.shape
+        x = x.view(B, h, C // h, N)
+        for i in range(head):
+            x[i] = self.fc1[i](x[i])
+            x[i] = self.act[i](x[i])
+            x[i] = self.fc2[i](x[i])
+        return x
+
+
 class MixerBlock(nn.Module):
     def __init__(
             self, dim, seq_len, mlp_ratio=(0.5, 4.0), mlp_layer=Mlp,
@@ -84,7 +107,7 @@ class MixerBlock(nn.Module):
         super().__init__()
         tokens_dim, channels_dim = [int(x * dim) for x in to_2tuple(mlp_ratio)]
         self.norm1 = norm_layer(dim)
-        self.mlp_tokens = mlp_layer(seq_len, tokens_dim, act_layer=act_layer, drop=drop)
+        self.mlp_tokens = MutiHeadMlp(seq_len, tokens_dim, act_layer=act_layer, drop=drop, head=1)
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.norm2 = norm_layer(dim)
         self.mlp_channels = mlp_layer(dim, channels_dim, act_layer=act_layer, drop=drop)
