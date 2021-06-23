@@ -95,8 +95,6 @@ class MutiHeadMlp(nn.Module):
 
     def forward(self, x):
         B,C,N = x.shape
-        import pdb
-        pdb.set_trace()
         x = x.view(B, self.head, C // self.head, N)
         x = (x @ self.fc1) + self.bias1
         x = self.act(x)
@@ -112,8 +110,8 @@ class MixerBlock(nn.Module):
         super().__init__()
         tokens_dim, channels_dim = [int(x * dim) for x in to_2tuple(mlp_ratio)]
         self.norm1 = norm_layer(dim)
-        # self.mlp_tokens = MutiHeadMlp(seq_len, tokens_dim, act_layer=act_layer, drop=drop, head=2)
-        self.mlp_tokens = mlp_layer(seq_len, tokens_dim, act_layer=act_layer, drop=drop)
+        self.mlp_tokens = MutiHeadMlp(seq_len, tokens_dim, act_layer=act_layer, drop=drop, head=2)
+        # self.mlp_tokens = mlp_layer(seq_len, tokens_dim, act_layer=act_layer, drop=drop)
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.norm2 = norm_layer(dim)
         self.mlp_channels = mlp_layer(dim, channels_dim, act_layer=act_layer, drop=drop)
