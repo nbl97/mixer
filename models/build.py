@@ -5,7 +5,6 @@
 # Written by Ze Liu
 # --------------------------------------------------------
 
-from .swin_transformer import SwinTransformer
 from .mlpmixer import MlpMixer
 
 def build_model(config):
