@@ -235,8 +235,3 @@ class gmlp(nn.Module):
         x = self.head(x)
         return x
 
-
-# model = gmlp(attention=True)
-
-# model(torch.rand(1,3,224,224))
-

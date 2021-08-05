@@ -1,5 +1,5 @@
 DATA:
-  BATCH_SIZE: 512 #18G
+  BATCH_SIZE: 512
 MODEL:
   TYPE: gmlp
   NAME: gmlp_s_ta
