@@ -67,6 +67,12 @@ _C.MODEL.MIXER.PATCH_SIZE = 16
 _C.MODEL.MIXER.NUM_BLOCKS = 8
 _C.MODEL.MIXER.HIDDEN_DIM = 512
 
+
+# MlpMixer
+_C.MODEL.GMLP = CN()
+_C.MODEL.GMLP.ATTENTION=False
+
+
 # -----------------------------------------------------------------------------
 # Training settings
 # -----------------------------------------------------------------------------

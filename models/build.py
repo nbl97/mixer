@@ -1,5 +1,7 @@
 
 from .mlpmixer import MlpMixer
+from .gmlp import gmlp
+
 
 def build_model(config):
     model_type = config.MODEL.TYPE
@@ -14,7 +16,9 @@ def build_model(config):
                         drop_rate=config.MODEL.DROP_RATE,
                         drop_path_rate=config.MODEL.DROP_PATH_RATE,
                         stem_norm=config.MODEL.MIXER.STEM_NORM)
-    else:
+    elif model_type == 'gmlp':
+        model = gmlp(attention=config.MODEL.GMLP.ATTENTION)
+    else:    
         raise NotImplementedError(f"Unkown model: {model_type}")
 
     return model
